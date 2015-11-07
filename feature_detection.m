@@ -73,18 +73,16 @@ function feature_detection()
     ShowImage( FIy2, 'Filtered Iy squared' );
     ShowImage( FIxy, 'Filtered Ix * Iy' );    
     
-    
-    %Compute a corner strength function
-    alpha = 0.04;
-    c = ( FIx2.*FIxy ) - ( FIxy.*FIxy ) - (alpha.*( FIx2 + FIy2 ).*( FIx2 + FIy2 ));
-    
-    %Verify Step 5
-    ShowImage( c, 'Corner Strength' );
 
-    H = [ Ix2 Ixy  ;
-          Ixy Iy2 ];
+    %Compute a corner strength function    
+    %c(H) = det(H) / trace(H)
+    corners = (FIx2.*FIy2 - FIxy.*FIxy ) ./ (FIx2+FIy2);
+    %Verify Step 5
+    ShowImage( corners, 'Corner Strength' );
+
+
       
-    detH = ( Ix2.*Iy2 ) - ( Ixy.*Ixy );
+    %detH = ( Ix2.*Iy2 ) - ( Ixy.*Ixy );
       
     %ShowFeatures( i1, 0, 0, 0 );
 end
