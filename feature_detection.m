@@ -17,9 +17,12 @@ function feature_detection()
 %       as detected features
 %   6. (optionally) apply non-maximum suppression to 
 %       ensure feature is a local maxima
-
+    
+    clc
+    close all
+    
     %Image Files
-    f1 = 'img\Yosemite\Yosemite1.jpg';
+    f1 = 'img\other\whatdeheek.PNG';
     f2 = 'img\Yosemite\Yosemite1.jpg';
     
     %Kernel Type
@@ -27,26 +30,63 @@ function feature_detection()
     
     %Gaussian Variables
     hsize = 5;
-    sigma = 0.5;
+    sigma = 5;
     
+    %Open Image
     [ i1, i1g ] = ReadImage( f1 );
     
+    %Verify Step 1
+    ShowImage( i1, 'Original Image' );
+
     %Build Gaussian
     gauss = fspecial('gaussian', hsize, sigma);
     
     %Get Kernels
     [ kernX, kernY ] = GetKernel( kType );
-    %Compute Ix and Iy by convolving original image with derivative
+   
+    %Compute Image derivatives Ix and Iy by convolving original image
     Ix = conv2( i1g, kernX );
     Iy = conv2( i1g, kernY );
 
+    %Verify Step 2
+    ShowImage( Ix, 'Ix' );
+    ShowImage( Iy, 'Iy' );
+    
     %Compute the three images corresponding to Ix^2, Iy^2, and Ix Iy    
     Ix2 = Ix.*Ix;
     Iy2 = Iy.*Iy;
     Ixy = Ix.*Iy;
     
-    %Compute 
-    ShowFeatures( i1, 0, 0, 0 );
+    %Verify Step 3
+    ShowImage( Ix2, 'Ix squared' );
+    ShowImage( Iy2, 'Iy squared' );
+    ShowImage( Ixy, 'Ix * Iy' );
+
+    gaussder = conv2(fspecial('gaussian',[7 7],4),[ 1 0 -1 ], 'valid');
+    %Gauss Filter Ix2, Iy2, Ixy
+    FIx2 = conv2( Ix2, gauss);
+    FIy2 = conv2( Iy2, gauss );
+    FIxy = conv2( Ixy, gauss );
+
+    %Verify Step 4
+    ShowImage( FIx2, 'Filtered Ix squared' );
+    ShowImage( FIy2, 'Filtered Iy squared' );
+    ShowImage( FIxy, 'Filtered Ix * Iy' );    
+    
+    
+    %Compute a corner strength function
+    alpha = 0.04;
+    c = ( FIx2.*FIxy ) - ( FIxy.*FIxy ) - (alpha.*( FIx2 + FIy2 ).*( FIx2 + FIy2 ));
+    
+    %Verify Step 5
+    ShowImage( c, 'Corner Strength' );
+
+    H = [ Ix2 Ixy  ;
+          Ixy Iy2 ];
+      
+    detH = ( Ix2.*Iy2 ) - ( Ixy.*Ixy );
+      
+    %ShowFeatures( i1, 0, 0, 0 );
 end
 
 
@@ -60,21 +100,24 @@ function [ img, img_g ] = ReadImage( file )
     
 end
 
-function ShowImage( img, description )
+function ShowImage( img, caption )
 
     %Show images with appropriate descriptions
     figure, imshow( img,[] );    
-    title( description );
+    title( caption );
     
 end
 
-function ShowFeatures( image, location, scale, orientation )
+function ShowFeatures( image, location, scale, orientation, caption )
+
+    if nargin < 5
+       caption = 'Here it is';
+    end
 
 
 
 
-
-    ShowImage( image, 'Here it is' );
+    ShowImage( image, caption );
 
 end
 
