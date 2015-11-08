@@ -22,21 +22,32 @@ function feature_detection()
     close all
     
     %Image Files
-    %f1 = 'img\other\whatdeheek.PNG';
-    f1 = 'img\bikes\img1.ppm';
+    f1 = 'img\Yosemite\Yosemite1.jpg';
+    %f1 = 'img\bikes\img1.ppm';
     
+
+    
+    %Open Image
+    img = imread( f1 );
+    
+    location = Harris( img );
+    orientation = GetOrientation( location )
+
+    ShowFeatures( img, location, 0, orientation );
+end
+
+function [ points ] = Harris( image )
+
     %Kernel Type
-    kType = 'ISOTROPIC';
+    kType = 'SOBEL';
     
     %Gaussian Variables
     hsize = 5;
     sigma = 5;
     
-    %Open Image
-    [ i1, i1g ] = ReadImage( f1 );
-    
+    gray = PrepImage( image );
     %Verify Step 1
-    ShowImage( i1, 'Original Image' );
+    ShowImage( image, 'Original Image' );
 
     %Build Gaussian
     gauss = fspecial('gaussian', hsize, sigma);
@@ -45,8 +56,8 @@ function feature_detection()
     [ kernX, kernY ] = GetKernel( kType );
    
     %Compute Image derivatives Ix and Iy by convolving original image
-    Ix = conv2( i1g, kernX );
-    Iy = conv2( i1g, kernY );
+    Ix = conv2( gray, kernX );
+    Iy = conv2( gray, kernY );
 
     %Verify Step 2
     ShowImage( Ix, 'Ix' );
@@ -81,9 +92,10 @@ function feature_detection()
     %Verify Step 5
     ShowImage( corners, 'Corner Strength' );
 
-    threshold = 900;
+    threshold = 150;
     
     %Design Filter
+    %local maximum in at least a 3x3 neighborhood.
     maxval = ordfilt2(corners, 9, ones(3,3));
     
     %Find all corners
@@ -93,16 +105,15 @@ function feature_detection()
     [r, c] = find(maxlist);
     %detH = ( Ix2.*Iy2 ) - ( Ixy.*Ixy );
       
-    location = [r,c];
-    ShowFeatures( i1, location, 0, 0 );
+    points = [r,c];
+    %orientation = GetOrientation( location, Ix, Iy )
+
 end
 
 
-function [ img, img_g ] = ReadImage( file )
+function [ img_g ] = PrepImage( img )
 
-    %Read in image, scale it down a bit, return colored img and grayscale
-    img = imread( file );
-    img = imresize( img, 0.8 );
+    %img = imresize( img, 0.8 );
     img_g = rgb2gray( img );
     img_g = double( img_g );
     
@@ -127,6 +138,7 @@ function ShowFeatures( image, location, scale, orientation, caption )
     [length, blah] = size(location);
     for i = 1: length
 
+
         x = location(i,2);
         y =  location(i,1);
         
@@ -135,15 +147,18 @@ function ShowFeatures( image, location, scale, orientation, caption )
         x1 = x - delta;
         y1 = y - delta;
 
-        x2 = x + delta;
-        y2 = y + delta;
-
         pos = [x1, y1, 5, 5];
         hold on;
-        rectangle('position', pos ,'EdgeColor','r');
+        rectangle('position', pos ,'EdgeColor','m');
 
     end
 
+
+end
+
+function [ O ] = GetOrientation( feature, Ix, Iy )
+
+O = 1;
 
 end
 
