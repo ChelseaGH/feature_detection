@@ -22,11 +22,11 @@ function feature_detection()
     close all
     
     %Image Files
-    f1 = 'img\other\whatdeheek.PNG';
-    f2 = 'img\Yosemite\Yosemite1.jpg';
+    %f1 = 'img\other\whatdeheek.PNG';
+    f1 = 'img\bikes\img1.ppm';
     
     %Kernel Type
-    kType = 'SOBEL';
+    kType = 'ISOTROPIC';
     
     %Gaussian Variables
     hsize = 5;
@@ -40,7 +40,7 @@ function feature_detection()
 
     %Build Gaussian
     gauss = fspecial('gaussian', hsize, sigma);
-    
+ 
     %Get Kernels
     [ kernX, kernY ] = GetKernel( kType );
    
@@ -62,7 +62,6 @@ function feature_detection()
     ShowImage( Iy2, 'Iy squared' );
     ShowImage( Ixy, 'Ix * Iy' );
 
-    gaussder = conv2(fspecial('gaussian',[7 7],4),[ 1 0 -1 ], 'valid');
     %Gauss Filter Ix2, Iy2, Ixy
     FIx2 = conv2( Ix2, gauss);
     FIy2 = conv2( Iy2, gauss );
@@ -76,15 +75,26 @@ function feature_detection()
 
     %Compute a corner strength function    
     %c(H) = det(H) / trace(H)
-    corners = (FIx2.*FIy2 - FIxy.*FIxy ) ./ (FIx2+FIy2);
+    detH = FIx2.*FIy2 - FIxy.*FIxy;
+    traceH = FIx2+FIy2;
+    corners = detH ./ traceH;
     %Verify Step 5
     ShowImage( corners, 'Corner Strength' );
 
-
-      
+    threshold = 900;
+    
+    %Design Filter
+    maxval = ordfilt2(corners, 9, ones(3,3));
+    
+    %Find all corners
+    maxlist = (corners == maxval) & (corners > threshold);
+    
+    %Find all points that satisfy the filter
+    [r, c] = find(maxlist);
     %detH = ( Ix2.*Iy2 ) - ( Ixy.*Ixy );
       
-    %ShowFeatures( i1, 0, 0, 0 );
+    location = [r,c];
+    ShowFeatures( i1, location, 0, 0 );
 end
 
 
@@ -108,14 +118,32 @@ end
 
 function ShowFeatures( image, location, scale, orientation, caption )
 
+    delta = 5;
     if nargin < 5
        caption = 'Here it is';
     end
+        ShowImage( image, caption );
 
+    [length, blah] = size(location);
+    for i = 1: length
 
+        x = location(i,2);
+        y =  location(i,1);
+        
+        point = [x,y];
 
+        x1 = x - delta;
+        y1 = y - delta;
 
-    ShowImage( image, caption );
+        x2 = x + delta;
+        y2 = y + delta;
+
+        pos = [x1, y1, 5, 5];
+        hold on;
+        rectangle('position', pos ,'EdgeColor','r');
+
+    end
+
 
 end
 
