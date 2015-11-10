@@ -1,4 +1,8 @@
 function [ r2, c2 ] = ExtraFilter( r,c, image )
+%ExtraFilter Filter out accidental corners on edge of image.
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
     [lengthR, none] = size(r);
     [lengthC, none] = size(c);
     

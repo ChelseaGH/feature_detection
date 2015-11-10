@@ -1,4 +1,9 @@
 function [ Gx, Gy ] = GetKernel( kType )
+%GetKernel Generate a common kernel type
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
+
     %Ensure first arg is always caps
     kType = upper(kType);
     

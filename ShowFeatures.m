@@ -1,4 +1,8 @@
 function ShowFeatures( location, scale, orientation )
+%ShowFeatures Plot all found image descriptors on image
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
 
     %Computers are row major, but we like to think of x first y second
     %When plotting, so let's flip these around
@@ -17,7 +21,7 @@ function ShowFeatures( location, scale, orientation )
 
     size(scale);
     
-    scale = scale * 2;
+    %scale = scale /100;
     
     for i=1:locX
         

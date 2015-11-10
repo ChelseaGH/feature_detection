@@ -1,5 +1,21 @@
-
 function [ points, Ix, Iy ] = Harris( image, threshold )
+%Harris Harris Algorithm for detecting image corners:
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
+% Algorithm
+%   1. Compute Ix and Iy by convolving the original 
+%        image with a derivative
+%   2. Compute the three images corresponding to 
+%       Ix^2, Iy^2, and Ix Iy
+%   3. Convolve each of these images with a larger 
+%       Gaussian
+%   4. Compute the corner strength according to one 
+%       of the corner strength functions
+%   5. Find the maxima above a threshold and report 
+%       as detected features
+%   6. (optionally) apply non-maximum suppression to 
+%       ensure feature is a local maxima
 
     if nargin < 2
         %If threshold is too high, sometimes breaks, keep that in mind i
@@ -76,6 +92,5 @@ function [ points, Ix, Iy ] = Harris( image, threshold )
     %Get rid of false positives generated around edge of image....
     [r2, c2] = ExtraFilter( r, c, image);
     points = [r2,c2];
-    %orientation = GetOrientation( location, Ix, Iy )
 
 end
