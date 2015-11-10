@@ -23,6 +23,7 @@ function ShowFeatures( location, scale, orientation )
         
         %Use Rotation Matrix to determine how much each box is rotated
         angle = orientation;
+        theta = degtorad(angle(i));
         Rot = [ cos(angle(i)) -sin(angle(i)) ; 
               sin(angle(i)) cos(angle(i)) ];
         box(i) = 10;

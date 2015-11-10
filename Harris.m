@@ -1,6 +1,11 @@
 
-function [ points, Ix, Iy ] = Harris( image )
+function [ points, Ix, Iy ] = Harris( image, threshold )
 
+    if nargin < 2
+        %If threshold is too high, sometimes breaks, keep that in mind i
+        %gguess
+         threshold = 500;
+    end
     %Kernel Type
     kType = 'SOBEL';
     
@@ -19,8 +24,8 @@ function [ points, Ix, Iy ] = Harris( image )
     [ kernX, kernY ] = GetKernel( kType );
    
     %Compute Image derivatives Ix and Iy by convolving original image
-    Ix = conv2( gray, kernX );
-    Iy = conv2( gray, kernY );
+    Ix = conv2( gray, kernX, 'same' );
+    Iy = conv2( gray, kernY, 'same' );
 
     %Verify Step 2
     %ShowImage( Ix, 'Ix' );
@@ -37,9 +42,9 @@ function [ points, Ix, Iy ] = Harris( image )
     %ShowImage( Ixy, 'Ix * Iy' );
 
     %Gauss Filter Ix2, Iy2, Ixy
-    FIx2 = conv2( Ix2, gauss);
-    FIy2 = conv2( Iy2, gauss );
-    FIxy = conv2( Ixy, gauss );
+    FIx2 = conv2( Ix2, gauss, 'same' );
+    FIy2 = conv2( Iy2, gauss, 'same' );
+    FIxy = conv2( Ixy, gauss, 'same' );
 
     %Verify Step 4
     %ShowImage( FIx2, 'Filtered Ix squared' );
@@ -56,11 +61,10 @@ function [ points, Ix, Iy ] = Harris( image )
     %Verify Step 5
     %ShowImage( corners, 'Corner Strength' );
 
-    threshold = 10;
     
     %Design Filter
     %local maximum in at least a 3x3 neighborhood.
-    maxval = ordfilt2(corners, 9, ones(15,15));
+    maxval = ordfilt2(corners, 25, ones(5,5));
     
     %Find all corners
     maxlist = (corners == maxval) & (corners > threshold);

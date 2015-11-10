@@ -23,19 +23,24 @@ function FeatureDetection()
     
 
     %Image Files
-%     f1 = 'img\bikes\img1.ppm';
-%     f2 = 'img\bikes\img2.ppm';
-%     
+    f1 = 'img\bikes\img1.ppm';
+    f2 = 'img\bikes\img2.ppm';
+    
 
     f1 = 'img\Yosemite\Yosemite1.jpg';
     f2 = 'img\Yosemite\Yosemite2.jpg';
     
+
+%     f1 = 'img\graf\img1.ppm';
+%     f2 = 'img\graf\img2.ppm';
+    
+
     %Open Image 1
     img1 = imread( f1 );
-    [loc1, Ix1, Iy1 ] = Harris( img1 );
+    [loc1, Ix1, Iy1 ] = Harris( img1, 1000 );
     ori1 = GetOrientation( loc1, Ix1, Iy1 );
-    scal1 = GetScale( loc1, Ix1, Iy1);
-    %scal1 = ones(2000); % GetScale( loc1, Ix1, Iy1);
+    %scal1 = GetScale( loc1, Ix1, Iy1);
+    scal1 = ones(2000); % GetScale( loc1, Ix1, Iy1);
     
     ShowImage( img1, 'wohooopie' );
     ShowFeatures(  loc1, scal1, ori1 );
@@ -44,17 +49,16 @@ function FeatureDetection()
 
      %Open Image 2
      img2 = imread( f2 );
-     [loc2, Ix2, Iy2 ] = Harris( img2 );
+     %img2 = imrotate( img2, 90 );
+     [loc2, Ix2, Iy2 ] = Harris( img2, 500 );
      ori2 = GetOrientation( loc2, Ix2, Iy2 );
-     scal2 = GetScale(loc2, Ix2, Iy2); 
-     %scal2 = ones(2000); % GetScale( loc1, Ix1, Iy1);
+     %scal2 = GetScale(loc2, Ix2, Iy2); 
+     scal2 = ones(2000); % GetScale( loc1, Ix1, Iy1);
      
      ShowImage( img2, 'wohooopie' );
      ShowFeatures(  loc2, scal2, ori2 );
      
-     newLoc2 = Offset(loc2, img1);
-     GetMatches( img1, loc1, scal1, ori1, img2, newLoc2, scal2, ori2 );
-     SSD( loc1, loc2);
+     GetMatches( img1, loc1, scal1, ori1, img2, loc2, scal2, ori2 );
 end
 
 

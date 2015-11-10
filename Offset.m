@@ -1,9 +1,10 @@
 
-function [ loc ] = Offset( loc, firstImg )
+function [ loc, offset ] = Offset( loc, firstImg )
 
     [sizeX,sizeY] = size(rgb2gray(firstImg));
     
     [locX, locY] = size(loc);
     
-    loc(:,2) = loc(:,2) + sizeY;
+    offset = sizeY;
+    loc(:,2) = loc(:,2) + offset;
 end

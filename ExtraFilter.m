@@ -6,7 +6,7 @@ function [ r2, c2 ] = ExtraFilter( r,c, image )
     image = double( image );
     [ maxX, maxY ] = size(image);
     
-    delta = 10;
+    delta = 25;
     
     %Mark all "bad points" as -1
     for i = 1: lengthR
