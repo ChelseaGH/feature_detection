@@ -1,5 +1,8 @@
-
 function [ pos ] = SSD( f1, f2 )
+%SSD Squared Sum of Differences
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
 % Naive Approach:
 % Sum of square differences between the elements of the two descriptors
 %   (2-norm)

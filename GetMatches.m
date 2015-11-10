@@ -1,5 +1,8 @@
 function GetMatches( img1, loc1, scal1, ori1, img2, loc2, scal2, ori2 )
-
+%GetMatches Plot lines from one image to another based on features
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
 
     [ x1, y1 ] = size(img1);
     [ x2, y2 ] = size(img2);
@@ -12,15 +15,18 @@ function GetMatches( img1, loc1, scal1, ori1, img2, loc2, scal2, ori2 )
      ShowFeatures(  loc1, scal1, ori1 );
      ShowFeatures(  newLoc2, scal2, ori2 );
     
-%      feat1 = GetBadFeatures( img1, loc1 );
-%      feat2 = GetBadFeatures( img2, loc2 );
-%      
-      feat1 = GetRotatedFeatures( img1, loc1, ori1 );
-      feat2 = GetRotatedFeatures( img2, loc2, ori2 );
-      
+     feat1 = GetBadFeatures( img1, loc1 );
+     feat2 = GetBadFeatures( img2, loc2 );
+     
+%       feat1 = GetRotatedFeatures( img1, loc1, ori1 );
+%       feat2 = GetRotatedFeatures( img2, loc2, ori2 );
+%       
+
+     feat1 = GetSIFTy( img1, loc1 );
+     feat2 = GetSIFTy( img2, loc2 );
      %pos = SSD( feat1, feat2 );
      %pos = SSDRatio( feat1, feat2 );
-     pos = SSDCustom( feat1, feat2, 30 );
+     pos = SSDCustom( feat1, feat2, 1.5 );
 
      [ ~, sz ] = size(pos);
 

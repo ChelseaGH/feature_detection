@@ -1,5 +1,8 @@
-
 function [ pos ] = SADCustom( f1, f2, tolerance )
+%SADCustom Custom Squared Absolute Differences
+%%% Julian Anthony Brackins   %%%
+%%% CSC 514 - Computer Vision %%%
+%%% Project 1                 %%%
 % Custom Approach:
 % Sum of square differences between the elements of the two descriptors
 %   (2-norm)
