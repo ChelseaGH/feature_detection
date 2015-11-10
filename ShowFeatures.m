@@ -25,11 +25,11 @@ function ShowFeatures( location, scale, orientation )
     
     for i=1:locX
         
-        %Use Rotation Matrix to determine how much each box is rotated
+        %Build Matrix to determine how much each box is rotated
         angle = orientation;
         theta = degtorad(angle(i));
         Rot = [ cos(angle(i)) -sin(angle(i)) ; 
-              sin(angle(i)) cos(angle(i)) ];
+                sin(angle(i)) cos(angle(i)) ];
         box(i) = 10;
 
         %Set the scaling of the box based on previous scaling weights
@@ -49,7 +49,7 @@ function ShowFeatures( location, scale, orientation )
         %Create a matrix of length Xcoord of center coords
         Rpoint = repmat([xPoint;yPoint], 1, length(Xcoord(1,:)));
 
-        %Combine into 2D Coordinate Matrix
+        %Develop 2D matrix for rotations
         Coord = [Xcoord(1,:);Ycoord(1,:)];
         
         size(Coord);
